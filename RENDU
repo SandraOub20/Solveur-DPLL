@@ -1,0 +1,100 @@
+                      Mini-projet 1 : solveur DPLL récursif
+                             fichier RENDU
+                       
+
+********** à remplir obligatoirement **********
+
+**Un mini-projet sans fichier RENDU rempli ne recevra pas de note.**
+
+Date limite: le vendredi 25 octobre 2024 à 19:00
+
+Identité
+--------
+Nombre de binôme: 17
+Nom, prénom 1: Oubakouk, Sandra 
+Nom, prénom 2: Hounas, Sabrina
+
+
+Questions sur votre code
+------------------------
+0. Avez-vous testé que `make dpll` s'exécute sans erreurs ou warnings,
+   et que ensuite `./dpll sudoku-4x4.cnf` donne la réponse attendue (voir
+   fichier README) ?
+
+**à remplir**
+
+-> Oui "make dpll" s'exécute sans erreurs ni warnings, et on a eu le résultat attendu (indiqué dans le README) avec `./dpll sudoku-4x4.cnf
+
+---
+
+1. Avez-vous utilisé la fonction `filter_map` (donné dans dpll.ml)
+   dans votre implémentation de `simplifie` ? 
+   - Si oui, expliquez en quelques phrases en français comment vous
+     l'avez utilisée.
+   - Si non, expliquez en quelques phrases en français comment
+     fonctionne votre implémentation de `simplifie`.
+
+**à remplir**
+
+-> Oui on a bien utilisé la fonction `filter_map` (donné dans dpll.ml)
+   dans votre implémentation de `simplifie`
+   Explication : on a utilisé cette fonction dans `simplifie` , car on a utilisé une fonction auxiliaire qui prend une seule clause et la simplifie par l , et c'est là qu'intervient `filter_map` afin d'appliquer cette fonction auxiliaire sur toutes les clauses de la formule. Vu que `filter_map` renvoie une liste inversée on a appliqué List.rev sur le résultat.
+   
+
+---
+
+2. Pour l'implémentation de `unitaire`, quelles sont les fonctions
+   auxiliaires que vous avez utilisées et/ou écrites ? (Par une
+   fonction auxiliaire, on entend ici soit une fonction d'une
+   bibliothèque, par exemple des fonctions comme `List.length`,
+   `List.rev_append`, ou une fonction `aux_unitaire` que vous avez
+   écrite vous-mêmes.) Expliquez en quelques phrases en français
+   comment ces fonctions auxiliaires sont utilisées dans votre
+   implémentation de la fonction `unitaire`.
+
+**à remplir**
+-> Nous n'avons utilisé aucune fonction auxiliaire dans `unitaire`. Nous avons opté pour une autre approche plus optimale qui consiste à rendre la fonction `unitaire` récursive qui parcourt la liste de clauses et teste si elle contient un singleton. Si c'est le cas elle le renvoie, sinon elle continue son parcours récursif sur le reste de la liste.  
+---
+
+3. Pour l'implémentation de `pur`, quelles sont les fonctions
+   auxiliaires que vous avez utilisées et/ou écrites ?  Expliquez en
+   quelques phrases en français comment ces fonctions auxiliaires sont
+   utilisées dans votre implémentation de la fonction `pur`.
+
+**à remplir**
+-> Nous avons utilisé 3 fonctions de bibliothèque :  `List.flatten` , `List.mem` , `List.filter` . 
+ * On a utilisé `List.flatten` pour aplatir la liste de listes (liste de clauses) en une simple liste afin de faciliter le parcours.
+-> La fonction auxiliaire `aux` qui prend une simple liste de littéraux (le résultat de `List.flatten`). Cette fonction parcourt cette liste, pour chaque littéral l elle vérifie si -l est dans le reste la liste (c'est là ou `List.mem` intervient). 
+*Si c'est le cas on appelle récursivement aux sur le reste de la liste privée de toutes les occurrences de l et de -l (c'est ici qu'intervient `List.filter`)
+*Sinon cela signifie que l est pur donc on le renvoie.
+---
+
+4. Donnez un exemple d'une formule pour laquelle les deux fonctions
+   `solveur_split` et `solveur_dpll_rec` ont un comportement
+   différent, et expliquez les différences entre ces deux fonctions.
+
+**à remplir**
+
+Par exemple pour : 
+clauses = [[2; -4; -6], [-2; 3],[5; 6], [2], [-3]]
+Explication : 
+* La fonction solveur_split ne va pas tenir compte des littéraux purs et des clauses unitaire. Elle va plutôt choisir le premier littéral l de la première clause à chaque appel, par la suite elle va effectuer 2 branches l'une simplifie par l et si cette branche échoue, elle essaie avec -l (sa négation). Et ça continue ainsi récursivement. 
+* Or la fonction `solveur_dpll_rec` commence d'abord par vérifier s'il y a des clauses unitaires (dans notre exemple [2] , [-3] ). Ensuite elle simplifiera les clauses en conséquence (dans notre exemple elle va commencer par simplifier par 2 ensuite par -3).
+Elle va ensuite rechercher s'il y a des littéraux purs et simplifier les clauses en conséquence (dans notre exemple elle va commencer par 5). Ce n'est qu'après ça qu'elle va appliquer le split.
+
+* Pour conclure `solveur_dpll_rec` réduit la taille de la formule avant de faire le split contrairement à `solveur_split` qui ne tient pas compte des simplifications possibles ce qui le rend moins efficace que `solveur_dpll_rec`.
+
+
+
+
+
+---
+
+5. Avez-vous d'autres remarques sur votre rendu ? (question optionnelle)
+
+**à remplir**
+-> Nous avons préféré ne pas utiliser la fonction `solveur_split` dans `solveur_dpll_rec` mais inclure une partie de son code directement car c'était plus optimale.
+->
+---
+
+--fin du fichier RENDU--
